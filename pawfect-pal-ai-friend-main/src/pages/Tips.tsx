@@ -66,34 +66,6 @@ const Tips: React.FC = () => {
       const responseData = await response.json();
       setTip(responseData.choices[0].message.content);
 
-      // Get additional internet research via backend proxy
-      const perplexityResponse = await fetch('/api/perplexity', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'llama-3.1-sonar-small-128k-online',
-          messages: [
-            {
-              role: 'system',
-              content: 'Search the internet for recent, factual information about pet care. Focus on scientific sources and veterinary research.'
-            },
-            {
-              role: 'user',
-              content: `Find recent research or veterinary guidelines about ${data.category} for ${data.dogBreed} dogs. Focus on evidence-based information.`
-            }
-          ],
-          temperature: 0.2,
-          max_tokens: 300,
-        }),
-      });
-
-      if (perplexityResponse.ok) {
-        const perplexityData = await perplexityResponse.json();
-        setTip(prev => `${prev}\n\nAdditional Research:\n${perplexityData.choices[0].message.content}`);
-      }
-
     } catch (error) {
       console.error('Error getting tip:', error);
       toast({

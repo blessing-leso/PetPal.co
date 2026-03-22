@@ -85,34 +85,6 @@ const PhotoUpload: React.FC = () => {
         title: 'Analysis complete',
         description: 'Review the details below',
       });
-
-      // Get additional research from Perplexity via backend proxy
-      const perplexityResponse = await fetch('/api/perplexity', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'llama-3.1-sonar-small-128k-online',
-          messages: [
-            {
-              role: 'system',
-              content: 'Search for recent veterinary research and guidelines related to the query.'
-            },
-            {
-              role: 'user',
-              content: 'Please provide additional recent research or veterinary guidelines related to the pet image analysis.'
-            }
-          ],
-          temperature: 0.2,
-          max_tokens: 300,
-        }),
-      });
-
-      if (perplexityResponse.ok) {
-        const perplexityData = await perplexityResponse.json();
-        setAnalysis(prev => prev + '\n\nAdditional Research:\n' + perplexityData.choices[0].message.content);
-      }
     } catch (error) {
       console.error('Error analyzing image:', error);
       toast({

@@ -63,38 +63,6 @@ const Chat: React.FC = () => {
 
       setChatHistory(prev => [...prev, { role: 'assistant', content: aiResponse }]);
 
-      // Get additional research from Perplexity via backend proxy
-      const perplexityResponse = await fetch('/api/perplexity', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'llama-3.1-sonar-small-128k-online',
-          messages: [
-            {
-              role: 'system',
-              content: 'Search for recent veterinary research and guidelines related to the query.'
-            },
-            {
-              role: 'user',
-              content: userMessage
-            }
-          ],
-          temperature: 0.2,
-          max_tokens: 300,
-        }),
-      });
-
-      if (perplexityResponse.ok) {
-        const perplexityData = await perplexityResponse.json();
-        const researchInfo = perplexityData.choices[0].message.content;
-        setChatHistory(prev => [...prev, { 
-          role: 'assistant', 
-          content: `Additional Research:\n${researchInfo}\n\nRemember: This information is from internet sources and should not replace professional veterinary advice.` 
-        }]);
-      }
-
     } catch (error) {
       console.error('Error communicating with OpenAI:', error);
       toast({
